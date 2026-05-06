@@ -1,0 +1,73 @@
+{
+  "repo": "meridian-sys-lock-index",
+  "language": "R",
+  "category": "Systems programming",
+  "goal": "Build an R toolkit that studies lock behavior through safe and unsafe fixtures, with remediation hints and fixture-scale datasets.",
+  "review_model": {
+    "terms": [
+      "allocation pressure",
+      "dirty state",
+      "guard slack",
+      "layout drift"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "allocation pressure",
+      "signal": 78,
+      "slack": 40,
+      "drag": 10,
+      "confidence": 87,
+      "score": 253,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "dirty state",
+      "signal": 83,
+      "slack": 21,
+      "drag": 18,
+      "confidence": 68,
+      "score": 201,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "guard slack",
+      "signal": 66,
+      "slack": 44,
+      "drag": 26,
+      "confidence": 63,
+      "score": 161,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "layout drift",
+      "signal": 82,
+      "slack": 34,
+      "drag": 22,
+      "confidence": 62,
+      "score": 194,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "allocation pressure",
+      "signal": 61,
+      "slack": 51,
+      "drag": 28,
+      "confidence": 74,
+      "score": 163,
+      "lane": "ship"
+    }
+  ]
+}

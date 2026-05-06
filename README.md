@@ -1,67 +1,40 @@
 # meridian-sys-lock-index
 
-`meridian-sys-lock-index` packages a practical systems programming exercise in R. The emphasis is on deterministic behavior, a small public API, and examples that explain the tradeoffs.
+`meridian-sys-lock-index` is a R project in systems programming. Its focus is to build an R toolkit that studies lock behavior through safe and unsafe fixtures, with remediation hints and fixture-scale datasets.
 
-## How I Read Meridian Sys Lock Index
+## Problem It Tries To Make Smaller
 
-The useful thing to inspect here is how the same score rule is represented in code, metadata, and examples. If those three pieces disagree, the audit script should make the drift visible.
+The project exists to keep a narrow engineering decision visible and testable. For this repo, that decision is how allocation pressure and guard slack should influence a review result.
 
-## Problem Shape
+## Meridian Sys Lock Index Review Notes
 
-I use this kind of project to make a rule visible before adding more machinery around it. The important part here is not the size of the codebase. It is that the input signals, scoring rule, fixture data, and expected output can all be checked in one sitting.
+Start with `allocation pressure` and `guard slack`. Those cases create the widest score spread in this repo, so they are the best quick check when the model changes.
 
-## Repository Map
+## Working Pieces
 
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
+- `fixtures/domain_review.csv` adds cases for allocation pressure and dirty state.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/meridian-sys-lock-walkthrough.md` walks through the case spread.
+- The R code includes a review path for `allocation pressure` and `guard slack`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Main Behaviors
+## Design Notes
 
-- Includes extended examples for bounds checks, including `surge` and `degraded`.
-- Documents low-level invariants tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
-- Adds a repository audit script that checks structure before running the language verifier.
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## Internal Model
+The added R path is deliberately direct, with fixtures doing most of the explaining.
 
-The interesting part is the boundary between accepted and reviewed scenarios. Extended examples sit near that boundary so future edits can show whether the model became more permissive or more cautious. The R version keeps the model as simple functions over named lists for easy analysis use.
-
-## Run It Locally
-
-Install R and run the commands from the repository root. The project does not need credentials or a hosted service.
-
-## Scenario Walkthrough
-
-`examples/extended_cases.csv` adds six named cases. I kept the names plain so failures are easy to read in a terminal: baseline, pressure, surge, degraded, recovery, and boundary.
-
-## How To Run It
+## Example Run
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Tests
 
-## Validation
+The same command runs the local verification path. The highest-scoring domain case is `baseline` at 253, which lands in `ship`. The most cautious case is `edge` at 161, which lands in `ship`.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+## Known Limits
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Follow-Up Work
-
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add a short report command that prints the score breakdown for a single scenario.
-- Add malformed input fixtures so the failure path is as visible as the happy path.
-- Add one more systems programming fixture that focuses on a malformed or borderline input.
-
-## Known Edges
-
-The scoring model is simple by design. More domain-specific behavior should be added through explicit adapters or extra fixture classes rather than hidden constants.
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.
