@@ -1,0 +1,32 @@
+{
+  "index": 323,
+  "phase": 2,
+  "batch": 36,
+  "name": "meridian-sys-lock-index",
+  "planned_name": "meridian-sys-lock-index",
+  "language": "R",
+  "category": "Systems programming",
+  "goal": "Build an R toolkit that studies lock behavior through safe and unsafe fixtures, with remediation hints and fixture-scale datasets.",
+  "repository_url": "https://github.com/ZachL111/meridian-sys-lock-index",
+  "verification_command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1",
+  "model": {
+    "inputs": [
+      "demand",
+      "capacity",
+      "latency",
+      "risk",
+      "weight"
+    ],
+    "threshold": 173,
+    "risk_penalty": 5,
+    "latency_penalty": 3,
+    "weight_bonus": 5,
+    "decision_rule": "accept when score is greater than or equal to threshold, otherwise review"
+  },
+  "quality_gates": [
+    "readme constraint scan",
+    "fixture presence check",
+    "metadata JSON parse",
+    "language verifier"
+  ]
+}
